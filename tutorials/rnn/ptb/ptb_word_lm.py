@@ -478,19 +478,19 @@ def main(_):
         mtest = PTBModel(is_training=False, config=eval_config,
                          input_=test_input)
 
-    models = {"Train": m, "Valid": mvalid, "Test": mtest}
-    for name, model in models.items():
-      model.export_ops(name)
-    metagraph = tf.train.export_meta_graph()
+    # models = {"Train": m, "Valid": mvalid, "Test": mtest}
+    # for name, model in models.items():
+    #   model.export_ops(name)
+    # metagraph = tf.train.export_meta_graph()
     soft_placement = False
-    if FLAGS.num_gpus > 1:
-      soft_placement = True
-      util.auto_parallel(metagraph, m)
+    # if FLAGS.num_gpus > 1:
+    #   soft_placement = True
+    #   util.auto_parallel(metagraph, m)
 
-  with tf.Graph().as_default():
-    tf.train.import_meta_graph(metagraph)
-    for model in models.values():
-      model.import_ops()
+  # with tf.Graph().as_default():
+  #   tf.train.import_meta_graph(metagraph)
+  #   for model in models.values():
+  #     model.import_ops()
     sv = tf.train.Supervisor(logdir=FLAGS.save_path)
     try:
       if FLAGS.save_path:
