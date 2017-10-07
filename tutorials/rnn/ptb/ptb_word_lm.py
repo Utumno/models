@@ -65,6 +65,7 @@ import sys
 from functools import partial
 
 import numpy as np
+import shutil
 import tensorflow as tf
 
 import reader
@@ -245,7 +246,7 @@ class PTBModel(object):
         (cell_output, state) = cell(inputs[:, time_step, :], state)
         outputs.append(cell_output)
     output = tf.reshape(tf.concat(outputs, 1), [-1, config.hidden_size])
-    return output, state
+    return output, state # state: tuple with num_layers elements, output shape (batch_size * num_steps, hidden_size)
 
   def assign_lr(self, session, lr_value):
     session.run(self._lr_update, feed_dict={self._new_lr: lr_value})
@@ -491,6 +492,12 @@ def main(_):
     for model in models.values():
       model.import_ops()
     sv = tf.train.Supervisor(logdir=FLAGS.save_path)
+    try:
+      if FLAGS.save_path:
+        shutil.rmtree(FLAGS.save_path)
+        print('Removed %s' % FLAGS.save_path)
+    except FileNotFoundError:
+      pass
     config_proto = tf.ConfigProto(allow_soft_placement=soft_placement)
     with sv.managed_session(config=config_proto) as session:
       for i in range(config.max_max_epoch):

@@ -75,7 +75,7 @@ def ptb_raw_data(data_path=None):
   valid_path = os.path.join(data_path, "ptb.valid.txt")
   test_path = os.path.join(data_path, "ptb.test.txt")
 
-  word_to_id = _build_vocab(train_path)
+  word_to_id = _build_vocab(train_path) # map words to integers in decreasing frequency of occurrence
   train_data = _file_to_word_ids(train_path, word_to_id)
   valid_data = _file_to_word_ids(valid_path, word_to_id)
   test_data = _file_to_word_ids(test_path, word_to_id)
